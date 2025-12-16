@@ -40,10 +40,10 @@ yarn add mole-toast
 
 ## Usage
 
-Import `ToastManager` to root layout
+Import `ToastProvider` and `ToastManager` to root layout
 
 ```typescript
-import { ToastManager } from "mole-toast";
+import { ToastProvider, ToastManager } from "mole-toast";
 
 export default function RootLayout({
   children,
@@ -53,21 +53,23 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body>
-        {children}
-        <ToastManager />
+        <ToastProvider>
+          {children}
+          <ToastManager />
+        </ToastProvider>
       </body>
     </html>
   );
 }
 ```
 
-Use the toast hook like this:
+Use the toast hook inside of `ToastProvider`:
 
 ```typescript
 import React from "react";
 import { useToast, ToastManager } from "mole-toast";
 
-function App() {
+function DemoButton() {
   const toast = useToast();
 
   return (
