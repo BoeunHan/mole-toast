@@ -1,8 +1,8 @@
-import { useToastListStore } from "../store/useToastListStore";
+import { useToastContext } from "../providers/ToastProvider";
 import { ToastMessageDuration, ToastMessageType } from "../types/toast";
 
 export const useToast = () => {
-  const { addToast, resetToasts } = useToastListStore();
+  const { addToast, resetToasts } = useToastContext();
 
   return {
     longSuccess: (message: string) =>

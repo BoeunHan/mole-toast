@@ -1,4 +1,5 @@
 import "./styles.css";
 
-export * from "./components/ToastManager";
-export * from "./hooks/useToast";
+export { ToastManager } from "./components/ToastManager";
+export { useToast } from "./hooks/useToast";
+export { ToastProvider } from "./providers/ToastProvider";

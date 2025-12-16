@@ -11,7 +11,7 @@
     "build": "tsup src/index.ts --format cjs,esm --dts"
   },
   "author": "Boeun Han",
-  "description": "Lightweight toast notification library using Zustand and React",
+  "description": "Lightweight toast notification library for React",
   "repository": {
     "type": "git",
     "url": "https://github.com/BoeunHan/mole-toast.git"
@@ -21,7 +21,6 @@
     "toast",
     "notification",
     "react",
-    "zustand",
     "ui",
     "lightweight"
   ],
@@ -29,14 +28,12 @@
     "access": "public"
   },
   "peerDependencies": {
-    "react": ">=17",
-    "zustand": ">=4"
+    "react": ">=17"
   },
   "devDependencies": {
     "@types/react": "^19.1.8",
     "react": "^19.1.0",
     "tsup": "^8.5.0",
-    "typescript": "^5.8.3",
-    "zustand": "^5.0.6"
+    "typescript": "^5.8.3"
   }
 }

@@ -3,7 +3,7 @@ import SuccessIcon from "../icons/SuccessIcon";
 import ErrorIcon from "../icons/ErrorIcon";
 import WarningIcon from "../icons/WarningIcon";
 import InfoIcon from "../icons/InfoIcon";
-import { useToastListStore } from "../store/useToastListStore";
+import { useToastContext } from "../providers/ToastProvider";
 
 const ICON_MAP = {
   [ToastMessageType.SUCCESS]: SuccessIcon,
@@ -13,7 +13,7 @@ const ICON_MAP = {
 };
 
 export const ToastManager = () => {
-  const { toasts } = useToastListStore();
+  const { toasts } = useToastContext();
 
   return (
     <div className="toast-container">

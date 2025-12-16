@@ -7,7 +7,6 @@ Lightweight toast notification library for React
 ## Features
 
 - Simple toast API
-- Built with Zustand for state management
 - Supports multiple toast types and durations
 
 <br/>
@@ -101,8 +100,7 @@ export default App;
 
 This library requires the following peer dependencies to be installed in your project:
 
-> React (>=17)<br/>
-> Zustand (>=4)
+> React (>=17)
 
 <br/>
 

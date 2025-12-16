@@ -4,7 +4,7 @@ export default defineConfig({
   entry: ["src/index.ts"],
   format: ["cjs", "esm"],
   dts: true,
-  external: ["react", "zustand"],
+  external: ["react"],
   clean: true,
   injectStyle: true,
 });
