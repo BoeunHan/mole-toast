@@ -6,4 +6,5 @@ export default defineConfig({
   dts: true,
   external: ["react", "zustand"],
   clean: true,
+  injectStyle: true,
 });
