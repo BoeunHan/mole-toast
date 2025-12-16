@@ -12,7 +12,7 @@ import {
   ToastMessageType,
   ToastMessageDuration,
   ToastMessageState,
-} from "../types/toast";
+} from "../types";
 
 export interface Toast {
   id: number;
@@ -51,7 +51,7 @@ export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
         message,
         duration,
         type,
-        state: ToastMessageState.CREATE,
+        state: "create",
       };
 
       setToasts((prev) => [...prev, toast]);
@@ -64,7 +64,7 @@ export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
 
       const autoremoveToast = (id: number, duration: number) => {
         setTimeout(() => {
-          setToastState(id, ToastMessageState.GONE);
+          setToastState(id, "gone");
           setTimeout(() => {
             setToasts((prev) => prev.filter((t) => t.id !== id));
           }, 200);
@@ -72,7 +72,7 @@ export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
       };
 
       setTimeout(() => {
-        setToastState(id, ToastMessageState.VISIBLE);
+        setToastState(id, "visible");
       }, 50);
       autoremoveToast(id, duration === "short" ? 3000 : 5000);
     },

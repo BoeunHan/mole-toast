@@ -1,15 +1,16 @@
-import { ToastMessageState, ToastMessageType } from "../types/toast";
+import { ToastMessageState, ToastMessageType } from "../types";
 import SuccessIcon from "../icons/SuccessIcon";
 import ErrorIcon from "../icons/ErrorIcon";
 import WarningIcon from "../icons/WarningIcon";
 import InfoIcon from "../icons/InfoIcon";
 import { useToastContext } from "../providers/ToastProvider";
+import { JSX } from "react";
 
-const ICON_MAP = {
-  [ToastMessageType.SUCCESS]: SuccessIcon,
-  [ToastMessageType.ERROR]: ErrorIcon,
-  [ToastMessageType.WARNING]: WarningIcon,
-  [ToastMessageType.INFO]: InfoIcon,
+const ICON_MAP: Record<ToastMessageType, (props: any) => JSX.Element> = {
+  success: SuccessIcon,
+  error: ErrorIcon,
+  warning: WarningIcon,
+  info: InfoIcon,
 };
 
 export const ToastManager = () => {
@@ -23,9 +24,9 @@ export const ToastManager = () => {
           <div
             key={id}
             className={`toast-item ${
-              state === ToastMessageState.VISIBLE
+              state === "visible"
                 ? "toast-item-visible"
-                : state === ToastMessageState.CREATE
+                : state === "create"
                 ? "toast-item-create"
                 : "toast-item-hidden"
             }`}

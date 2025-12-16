@@ -1,26 +1,17 @@
 import { useToastContext } from "../providers/ToastProvider";
-import { ToastMessageDuration, ToastMessageType } from "../types/toast";
 
 export const useToast = () => {
   const { addToast, resetToasts } = useToastContext();
 
   return {
-    longSuccess: (message: string) =>
-      addToast(ToastMessageType.SUCCESS, message, ToastMessageDuration.LONG),
-    longError: (message: string) =>
-      addToast(ToastMessageType.ERROR, message, ToastMessageDuration.LONG),
-    longInfo: (message: string) =>
-      addToast(ToastMessageType.INFO, message, ToastMessageDuration.LONG),
-    longWarning: (message: string) =>
-      addToast(ToastMessageType.WARNING, message, ToastMessageDuration.LONG),
-    shortSuccess: (message: string) =>
-      addToast(ToastMessageType.SUCCESS, message, ToastMessageDuration.SHORT),
-    shortError: (message: string) =>
-      addToast(ToastMessageType.ERROR, message, ToastMessageDuration.SHORT),
-    shortInfo: (message: string) =>
-      addToast(ToastMessageType.INFO, message, ToastMessageDuration.SHORT),
-    shortWarning: (message: string) =>
-      addToast(ToastMessageType.WARNING, message, ToastMessageDuration.SHORT),
+    longSuccess: (message: string) => addToast("success", message, "long"),
+    longError: (message: string) => addToast("error", message, "long"),
+    longInfo: (message: string) => addToast("info", message, "long"),
+    longWarning: (message: string) => addToast("warning", message, "long"),
+    shortSuccess: (message: string) => addToast("success", message, "short"),
+    shortError: (message: string) => addToast("error", message, "short"),
+    shortInfo: (message: string) => addToast("info", message, "short"),
+    shortWarning: (message: string) => addToast("warning", message, "short"),
     clear: () => resetToasts(),
   };
 };
