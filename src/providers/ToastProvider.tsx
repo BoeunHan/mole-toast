@@ -28,10 +28,12 @@ interface ToastContextValue {
   addToast: (
     type: ToastMessageType,
     message: string,
-    duration: ToastMessageDuration
+    duration: ToastMessageDuration,
   ) => void;
   resetToasts: () => void;
 }
+
+const MAX_CNT = 5;
 
 const ToastContext = createContext<ToastContextValue | null>(null);
 
@@ -39,16 +41,67 @@ export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
   const [toasts, setToasts] = useState<Toast[]>([]);
 
   const idRef = useRef(0);
-  const timersRef = useRef<number[]>([]);
+  const timersRef = useRef<Map<number, number[]>>(new Map());
+
+  const registerTimer = (id: number, timer: number) => {
+    const timers = timersRef.current.get(id) || [];
+    timers.push(timer);
+    timersRef.current.set(id, timers);
+  };
+
+  const clearToastTimers = (id: number) => {
+    const timers = timersRef.current.get(id);
+    if (timers) {
+      timers.forEach(clearTimeout);
+      timersRef.current.delete(id);
+    }
+  };
+
+  const setToastState = (id: number, state: ToastMessageState) => {
+    setToasts((prev) => prev.map((t) => (t.id === id ? { ...t, state } : t)));
+  };
+
+  const autoRemoveToast = (id: number, duration: number) => {
+    registerTimer(
+      id,
+      setTimeout(() => {
+        setToastState(id, "gone");
+        registerTimer(
+          id,
+          setTimeout(() => {
+            setToasts((prev) => prev.filter((t) => t.id !== id));
+            clearToastTimers(id);
+          }, 200),
+        );
+      }, duration),
+    );
+  };
+
+  const showToast = (id: number, duration: ToastMessageDuration) => {
+    registerTimer(
+      id,
+      setTimeout(() => {
+        setToastState(id, "visible");
+      }, 50),
+    );
+
+    autoRemoveToast(id, duration === "short" ? 3000 : 5000);
+  };
+
+  const clearAllToastTimers = () => {
+    timersRef.current.forEach((timers) => {
+      timers.forEach(clearTimeout);
+    });
+    timersRef.current.clear();
+  };
 
   const addToast = useCallback(
     (
       type: ToastMessageType,
       message: string,
-      duration: ToastMessageDuration
+      duration: ToastMessageDuration,
     ) => {
       const id = ++idRef.current;
-
       const toast: Toast = {
         id,
         message,
@@ -57,56 +110,31 @@ export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
         state: "create",
       };
 
-      setToasts((prev) => [...prev, toast]);
+      setToasts((prev) => {
+        let next = [...prev, toast];
 
-      const setToastState = (id: number, state: ToastMessageState) => {
-        setToasts((prev) =>
-          prev.map((t) => (t.id === id ? { ...t, state } : t))
-        );
-      };
+        if (next.length > MAX_CNT) {
+          const oldest = next[0];
+          clearToastTimers(oldest.id);
+          next = next.slice(1);
+        }
 
-      const registerTimer = (timer: number) => {
-        timersRef.current.push(timer);
-      };
+        return next;
+      });
 
-      const autoRemoveToast = (id: number, duration: number) => {
-        registerTimer(
-          setTimeout(() => {
-            setToastState(id, "gone");
-            registerTimer(
-              setTimeout(() => {
-                setToasts((prev) => prev.filter((t) => t.id !== id));
-              }, 200)
-            );
-          }, duration)
-        );
-      };
-
-      const showToast = (id: number) => {
-        registerTimer(
-          setTimeout(() => {
-            setToastState(id, "visible");
-          }, 50)
-        );
-
-        autoRemoveToast(id, duration === "short" ? 3000 : 5000);
-      };
-
-      showToast(id);
+      showToast(id, duration);
     },
-    []
+    [],
   );
 
   const resetToasts = useCallback(() => {
     setToasts([]);
+    clearAllToastTimers();
   }, []);
 
   useEffect(() => {
     return () => {
-      for (const timer of timersRef.current) {
-        clearTimeout(timer);
-      }
-      timersRef.current = [];
+      clearAllToastTimers();
     };
   }, []);
 
@@ -116,7 +144,7 @@ export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
       addToast,
       resetToasts,
     }),
-    [toasts, addToast, resetToasts]
+    [toasts, addToast, resetToasts],
   );
 
   return (
